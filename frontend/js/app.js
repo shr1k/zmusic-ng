@@ -52,14 +52,14 @@ $(function() {
 			var username = $(this.username).val();
 			var password = $(this.password).val();
 			var button = login.find("button").removeClass("btn-primary").addClass("disabled");
-			login.find("input").val("").removeClass("incorrect-login").attr("disabled", "disabled");
+			login.find("input").val("").removeClass("incorrect-login").prop("disabled", true);
 			$.ajax("login", { type: "POST", data: { "username": username, "password": password } }).success(function(response) {
 				if (response.loggedin) {
 					button.addClass("btn-success");
 					login.fadeOut();
 					startApp();
 				} else {
-					login.find("input").removeAttr("disabled").val("").addClass("incorrect-login").first().focus();
+					login.find("input").prop("disabled", false).val("").addClass("incorrect-login").first().focus();
 					button.addClass("btn-danger").removeClass("disabled");
 				}
 			});
