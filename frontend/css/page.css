@@ -144,8 +144,9 @@
 }
 .btn-progress {
 	width: 395px;
-	display: inline-block;
 	height: 30px;
+	vertical-align: top;
+	display: inline-block;
 	margin-bottom: -15px;
 	border-radius: 0;
 	-moz-border-radius: 0;
@@ -153,7 +154,7 @@
 	cursor: pointer;
 }
 .btn-progress .bar {
-	padding-top: 5px;
+	line-height: 30px;
 	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
