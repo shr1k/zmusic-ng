@@ -43,8 +43,11 @@ var SongTable = Backbone.View.extend({
 	},
 	appendSong: function(song) {
 		var that = this;
+		var ref = this.viewRef;
 		_.defer(function() {
 			var row;
+			if (ref !== that.viewRef)
+				return;
 			if (!(song.id in that.songRows))
 				row = that.songRows[song.id] = new SongRow({ model: song });
 			that.$tbody.append(row.render().el);
@@ -53,6 +56,7 @@ var SongTable = Backbone.View.extend({
 	render: function() {
 		this.$tbody.empty().scrollTop(0);
 		this.songRows = {};
+		this.viewRef = new Object();
 		this.collection.each(this.appendSong);
 		this.showHideLoadall();
 		return this;
