@@ -29,9 +29,11 @@ var ReferenceCountingCollection = Backbone.Collection.extend({
 		var model = new this.model(attrs, options);
 		if (model.id in ReferenceCountedModel._ids)
 			model = ReferenceCountedModel._ids[model.id];
-		model.take();
-		if (!model._validate(attrs, options))
+		if (!model._validate(attrs, options)) {
+			this.trigger('invalid', this, attrs, options);
 			return false;
+		}
+		model.take();
 		return model;
 	},
 	_removeReference: function(model) {

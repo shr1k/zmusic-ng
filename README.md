@@ -152,7 +152,7 @@ By far the easiest way to run the application is standalone. Simply execute `bac
 
 The collection may be scanned using the admin credentials:
 
-    zmusic-ng $  curl http://127.0.0.1:5000/scan?username=ADMIN_USER&password=ADMIN_PASSWORD
+    zmusic-ng $  curl 'http://127.0.0.1:5000/scan?username=ADMIN_USER&password=ADMIN_PASSWORD'
 
 And then the site may be viewed in the browser:
 
