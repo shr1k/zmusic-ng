@@ -178,9 +178,10 @@ There is an additional makefile target called `update-collection` for uploading 
 
 The `server.cfg` configuration file controls the revelent paths for this command:
 
-* `SERVER`: The hostname of the remote server.
 * `LOCAL_COLLECTION_PATH`: The path of the music folder on the local system.
-* `SERVER_COLLECTION_PATH`: The destination path of the music folder on the remote system.
+* `UPLOAD_SERVER`: The hostname of the remote upload server, probably the same as `WEB_SERVER`.
+* `UPLOAD_SERVER_PATH`: The destination path of the music folder on the remote system.
+* `WEB_SERVER`: The hostname of the web server, probably the same as `UPLOAD_SERVER`.
 * `ADMIN_USERNAME` and `ADMIN_PASSWORD` should be the same as those set in `backend/app.cfg`.
 
 ### nginx / uwsgi
@@ -191,13 +192,11 @@ uwsgi should be run with the `-w zmusic:app` switch, possibly using `--chdir` to
 
 For easy deployment, the makefile has some deployment targets, which are configured by the `server.cfg` configuration file. These keys should be set:
 
-* `SERVER`: The hostname of the deployed server.
-* `SERVER_UPLOAD_PATH`: A remote path where the default ssh user can write.
-* `SERVER_DEPLOY_PATH`: A remote path where the default ssh user cannot write, but where root can.
-
-The `upload` target uploads relevent portions of the project to `SERVER_UPLOAD_PATH`. The `deploy` target first executes the `upload` target, then copies files from `SERVER_UPLOAD_PATH` to `SERVER_DEPLOY_PATH` with the proper permissions, and then finally restarts the uwsgi processes.
-
-    zmusig-ng $ make deploy
+* `WEB_SERVER`: The hostname of the deployed server.
+* `SERVER_STATIC_PATH`: The path of the static frontend files.
+* `SERVER_STATIC_USER`: The primary user for static file permissions.
+* `SERVER_APP_PATH`: The path of the python backend files.
+* `SERVER_STATIC_USER`: The primary user of the python backup files.
 
 These makefile targets should be used with care, and the makefile itself should be inspected to ensure all commands are correct for custom configurations.
 
