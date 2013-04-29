@@ -9,7 +9,7 @@ clean:
 	@$(MAKE) -C frontend clean
 	@$(MAKE) -C backend clean
 
-SSH_OPTS := -o ControlMaster=auto -o ControlPath=.ssh-deployment.sock
+SSH_OPTS := -q -o ControlMaster=auto -o ControlPath=.ssh-deployment.sock
 
 deploy: all
 	@echo "    SSH     $(WEB_SERVER)"
@@ -22,7 +22,7 @@ deploy: all
 		--rsync-path="sudo -n -u $(SERVER_STATIC_USER) rsync" frontend/ "$(WEB_SERVER):$(SERVER_STATIC_PATH)" 
 	
 	@echo "    CHOWN   $(SERVER_STATIC_USER):$(SERVER_APP_USER) $(WEB_SERVER):$(SERVER_STATIC_PATH)"
-	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo chown -v -R $(SERVER_STATIC_USER):$(SERVER_APP_USER) '$(SERVER_STATIC_PATH)'"
+	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo chown -R $(SERVER_STATIC_USER):$(SERVER_APP_USER) '$(SERVER_STATIC_PATH)'"
 	
 	@echo "    RSYNC   backend/zmusic $(WEB_SERVER):$(SERVER_APP_PATH)"
 	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo -u $(SERVER_APP_USER) -v"
@@ -30,11 +30,11 @@ deploy: all
 		--rsh="ssh $(SSH_OPTS)" --rsync-path="sudo -n -u $(SERVER_APP_USER) rsync" backend/zmusic/ "$(WEB_SERVER):$(SERVER_APP_PATH)"
 	
 	@echo "    CHOWN   $(SERVER_APP_USER):$(SERVER_APP_USER) $(WEB_SERVER):$(SERVER_APP_PATH)"
-	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo chown -v -R $(SERVER_APP_USER):$(SERVER_APP_USER) '$(SERVER_APP_PATH)'"
+	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo chown -R $(SERVER_APP_USER):$(SERVER_APP_USER) '$(SERVER_APP_PATH)'"
 	
 	@echo "    CHMOD   750/640 $(WEB_SERVER):$(SERVER_APP_PATH) $(WEB_SERVER):$(SERVER_STATIC_PATH)"
-	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo find '$(SERVER_APP_PATH)' '$(SERVER_STATIC_PATH)' -type f -exec chmod -v 640 {} \;; \
-				sudo find '$(SERVER_APP_PATH)' '$(SERVER_STATIC_PATH)' -type d -exec chmod -v 750 {} \;;"
+	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo find '$(SERVER_APP_PATH)' '$(SERVER_STATIC_PATH)' -type f -exec chmod 640 {} \;; \
+				sudo find '$(SERVER_APP_PATH)' '$(SERVER_STATIC_PATH)' -type d -exec chmod 750 {} \;;"
 	
 	@echo "    UWSGI   restart $(WEB_SERVER)"
 	@ssh -t $(SSH_OPTS) $(WEB_SERVER) "sudo /etc/init.d/uwsgi restart"
